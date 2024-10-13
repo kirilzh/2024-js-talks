@@ -1,0 +1,71 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JS Talks Basic Demo</title>
+    <style>
+        :root {
+            --color: red;
+        }
+
+        h1 {
+            padding-right: 16px;
+        }
+
+        .flex {
+            display: flex;
+        }
+
+        .flex-align-center {
+            align-items: center;
+        }
+
+        .flex-column {
+            flex-direction: column;
+        }
+
+        .full-height {
+            height: 100%;
+        }
+
+        .content {
+            flex-grow: 1;
+            border: 5px solid;
+            border-image-source: paint(block);
+            border-image-slice: 10;
+        }
+    </style>
+</head>
+<body>
+<div class="flex flex-column full-height">
+    <div class="flex flex-align-center">
+        <h1>
+            This is the basic demo
+        </h1>
+        <div>
+            <button data-component="button" data-color="red">
+                Red
+            </button>
+            <button data-component="button" data-color="green">
+                Green
+            </button>
+            <button data-component="button" data-color="blue">
+                Blue
+            </button>
+        </div>
+    </div>
+    <div class="content">
+    </div>
+
+    <script>
+        CSS.paintWorklet.addModule('block.js');
+
+        document.querySelectorAll('[data-component="button"]').forEach((node) => {
+          node.addEventListener('click', () => {
+            document.documentElement.style.setProperty('--color', node.dataset.color)
+          })
+        })
+    </script>
+</div>
+</body>
+</html>
