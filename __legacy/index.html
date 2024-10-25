@@ -1,0 +1,62 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JS Talks</title>
+    <style>
+        :root {
+            --size: 30
+        }
+        body {
+            /*color: white;*/
+            background-image: paint(checkerboard);
+            /*background: linear-gradient(90deg, rgba(2, 0, 36, 1) 0%, rgba(15, 32, 68, 1) 100%);*/
+        }
+
+        h2 {
+            /*background-image: paint(checkerboard);*/
+        }
+    </style>
+</head>
+<body>
+
+<h2>This is JS.Talks</h2>
+
+<!--<button data-locator="R">Increase R</button>-->
+<!--<button data-locator="r">Increase r</button>-->
+<!--<button data-locator="d">Increase d</button>-->
+
+<script>
+CSS.paintWorklet.addModule('checkerboard.js');
+
+let size = 2;
+
+// setInterval(() => {
+//   size += 1;
+//   setRootCssProperty('--size', size);
+// }, 1000)
+
+
+// let R = 15;
+// let r = 8;
+// let d = 12;
+//
+// setRootCssProperty('--R', R);
+// setRootCssProperty('--r', r);
+// setRootCssProperty('--d', d);
+//
+// setInterval(() => {
+//   R += 1;
+//   r += 1;
+//   d += 1;
+//   setRootCssProperty('--R', R);
+//   setRootCssProperty('--r', r);
+//   setRootCssProperty('--d', d);
+// }, 1000)
+function setRootCssProperty(key, value) {
+  document.documentElement.style.setProperty(key, `${value}`);
+}
+</script>
+<!--<script type="text/javascript" src="index.js"></script>-->
+</body>
+</html>
