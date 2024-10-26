@@ -4,7 +4,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plural synchronous memory access</title>
     <style>
-        body {
+        body, p {
             margin: 0;
         }
 
@@ -13,7 +13,13 @@
             flex-direction: column;
         }
 
-        [data-component="generate-controls-wrapper"] {
+        [data-component="generator-list-item"] {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        [data-component="controls-wrapper"] {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -21,7 +27,7 @@
 
         [data-component="right-column"] {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             align-self: baseline;
             gap: 8px;
         }
@@ -30,38 +36,40 @@
 <body>
 <div style="display: grid; grid-template-columns: repeat(2, 1fr)">
     <div data-component="left-column">
-        <div data-component="generate-controls-wrapper">
+        <div data-component="controls-wrapper">
             <h2>
-                Generate
+                Generators
             </h2>
-            <button data-locator="start-generator">
-                Start
-            </button>
-            <button data-locator="resume-generator">
-                Resume
-            </button>
-            <button data-locator="pause-generator">
-                Pause
+            <button data-locator="create-generator">
+                Create
             </button>
         </div>
+        <ul data-locator="generator-list">
+
+        </ul>
         <div>
-            <div data-locator="result-block" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 400px">
+            <div data-locator="created-ticks" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 400px">
 
             </div>
         </div>
     </div>
 
     <div data-component="right-column">
-        <h2>
-            Retrieve:
-        </h2>
-        <button data-locator="start-iterator">
-            Start
-        </button>
-        <button>
-            Stop
-        </button>
+        <div data-component="controls-wrapper">
+            <h2>
+                Consumers
+            </h2>
+            <button data-locator="create-iterator">
+                Create
+            </button>
+        </div>
+        <div>
+            <div data-locator="consumed-ticks" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 400px">
+
+            </div>
+        </div>
     </div>
+
 </div>
 <script src="main.js" type="application/javascript"></script>
 </body>

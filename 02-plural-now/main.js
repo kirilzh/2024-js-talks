@@ -1,72 +1,140 @@
-const fibonacci = fibonacciGenerator();
-const iterator = fibonacciIterator();
+const tick = tickManager();
+const collection = createReactiveCollection();
 
-function* fibonacciGenerator() {
-  let result = 0;
-  let increment = 1;
+collection.addObserver((property, value) => {
+  if (property === 'push') {
+    tick.create(value);
+  }
 
-  while (true) {
-    yield result;
-    let temporary = result;
-    result = increment;
-    increment = temporary + increment;
+  if (property === 'shift') {
+    tick.move(value);
+  }
+});
+
+document
+  .querySelector('[data-locator="create-generator"]')
+  .addEventListener('click', () => {
+    const generator = collection.createGenerator();
+
+    const timer = setInterval(() => generator.next(), 1000);
+    createGeneratorDomEntry(timer);
+  });
+
+document
+  .querySelector('[data-locator="create-iterator"]')
+  .addEventListener('click', () => {
+    const iterator = collection.createIterator();
+
+    setInterval(() => iterator.next(), 1000);
+  });
+
+
+function createGeneratorDomEntry(timerId) {
+  const generatorList = document.querySelector('[data-locator="generator-list"]');
+
+  const row = document.createElement('li');
+  const contentWrapper = document.createElement('div');
+  contentWrapper.setAttribute('data-component', 'generator-list-item');
+
+  const generatorId = document.createElement('p');
+  generatorId.innerHTML = timerId;
+
+  const stop = createButton('stop', () => {
+    clearInterval(timerId);
+    row.remove();
+  });
+
+  contentWrapper.appendChild(generatorId);
+  contentWrapper.appendChild(stop);
+  row.appendChild(contentWrapper);
+  generatorList.appendChild(row);
+}
+
+function createReactiveCollection() {
+  let count = 0;
+  const collection = [];
+  const observers = [];
+
+  const reactiveCollection = new Proxy(collection, {
+    get(target, property, receiver) {
+      const result = Reflect.get(target, property, receiver);
+
+      if (property === 'shift') {
+        return function (...args) {
+          const value = result.apply(target, args);
+          notify(property, value);
+          return value;
+        }
+      }
+
+      if (property === 'push') {
+        return function (...args) {
+          notify(property, args[0]);
+          return result.apply(target, args);
+        }
+      }
+
+      return result;
+    }
+  });
+
+  function notify(property, value) {
+    observers.forEach((observer) => observer(property, value));
+  }
+
+  return {
+    addObserver: function (callback) {
+      if (typeof callback === 'function') {
+        observers.push(callback);
+      }
+    },
+
+    createGenerator: function* () {
+      while (true) {
+        yield true;
+        reactiveCollection.push(count);
+        count += 1;
+      }
+    },
+
+    createIterator: function* () {
+      while (true) {
+        if (reactiveCollection.length > 0) {
+          const firstNode = reactiveCollection.shift();
+          yield firstNode;
+        } else {
+          yield;
+        }
+      }
+    },
   }
 }
 
-function fibonacciIterator() {
+function tickManager() {
+  const createdBlock = document.querySelector('[data-locator="created-ticks"]');
+  const consumedBlock = document.querySelector('[data-locator="consumed-ticks"]')
+
   return {
-    next() {
-      const nodes = document.querySelectorAll('[data-value]');
+    create: function (value) {
+      const newNode = document.createElement('p');
+      newNode.setAttribute('data-value', value);
+      newNode.innerHTML = value;
 
-      if (!nodes.length) {
-        return { done: true, value: null }
-      }
+      createdBlock.appendChild(newNode);
+    },
+    move: function (value) {
+      const tick = document.querySelector(`[data-value="${value}"]`)
 
-      const node = nodes.item(0);
-      const value = node.getAttribute('data-value');
-      node.remove();
-
-      return { done: false, value }
+      consumedBlock.appendChild(tick);
     }
   }
 }
 
-let intervalId;
+function createButton(text, listener) {
+  const button = document.createElement('button');
+  button.innerHTML = text;
+  button.addEventListener('click', listener);
 
-document
-  .querySelector('[data-locator="start-generator"]')
-  .addEventListener('click', () => {
-    intervalId = setInterval(appendNextFibonacciNumber, 1000);
-  });
-
-document
-  .querySelector('[data-locator="resume-generator"]')
-  .addEventListener('click', () => {
-    intervalId = setInterval(appendNextFibonacciNumber, 1000);
-  })
-
-document
-  .querySelector('[data-locator="pause-generator"]')
-  .addEventListener('click', () => {
-    clearInterval(intervalId);
-  });
-
-document
-  .querySelector('[data-locator="start-iterator"]')
-  .addEventListener('click', () => {
-    setInterval(() => {
-      iterator.next();
-    }, 500);
-  });
-
-
-
-function appendNextFibonacciNumber() {
-  const resultBlock = document.querySelector('[data-locator="result-block"]');
-  const newNode = document.createElement('p');
-  const { value } = fibonacci.next();
-  newNode.setAttribute('data-value', `${value}`);
-  newNode.innerHTML = `${value}`;
-
-  resultBlock.appendChild(newNode);
+  return button;
 }
+
