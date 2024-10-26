@@ -4,13 +4,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Plural synchronous memory access</title>
     <style>
-        body, p {
-            margin: 0;
-        }
-
         [data-component="left-column"] {
             display: flex;
             flex-direction: column;
+        }
+
+        [data-component="right-column"] {
+            display: flex;
+            flex-direction: column;
+            align-self: baseline;
         }
 
         [data-component="generator-list-item"] {
@@ -22,13 +24,6 @@
         [data-component="controls-wrapper"] {
             display: flex;
             align-items: center;
-            gap: 8px;
-        }
-
-        [data-component="right-column"] {
-            display: flex;
-            flex-direction: column;
-            align-self: baseline;
             gap: 8px;
         }
     </style>
@@ -63,6 +58,9 @@
                 Create
             </button>
         </div>
+        <ul data-locator="iterator-list">
+
+        </ul>
         <div>
             <div data-locator="consumed-ticks" style="display: flex; flex-wrap: wrap; gap: 8px; max-height: 400px">
 

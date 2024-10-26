@@ -17,7 +17,9 @@ document
     const generator = collection.createGenerator();
 
     const timer = setInterval(() => generator.next(), 1000);
-    createGeneratorDomEntry(timer);
+
+    const generatorList = document.querySelector('[data-locator="generator-list"]');
+    createTimerNode(timer, generatorList);
   });
 
 document
@@ -25,30 +27,11 @@ document
   .addEventListener('click', () => {
     const iterator = collection.createIterator();
 
-    setInterval(() => iterator.next(), 1000);
+    const timer = setInterval(() => iterator.next(), 1000);
+
+    const iteratorList = document.querySelector('[data-locator="iterator-list"]');
+    createTimerNode(timer, iteratorList);
   });
-
-
-function createGeneratorDomEntry(timerId) {
-  const generatorList = document.querySelector('[data-locator="generator-list"]');
-
-  const row = document.createElement('li');
-  const contentWrapper = document.createElement('div');
-  contentWrapper.setAttribute('data-component', 'generator-list-item');
-
-  const generatorId = document.createElement('p');
-  generatorId.innerHTML = timerId;
-
-  const stop = createButton('stop', () => {
-    clearInterval(timerId);
-    row.remove();
-  });
-
-  contentWrapper.appendChild(generatorId);
-  contentWrapper.appendChild(stop);
-  row.appendChild(contentWrapper);
-  generatorList.appendChild(row);
-}
 
 function createReactiveCollection() {
   let count = 0;
@@ -91,8 +74,8 @@ function createReactiveCollection() {
 
     createGenerator: function* () {
       while (true) {
-        yield true;
         reactiveCollection.push(count);
+        yield count;
         count += 1;
       }
     },
@@ -128,6 +111,25 @@ function tickManager() {
       consumedBlock.appendChild(tick);
     }
   }
+}
+
+function createTimerNode(timerId, target) {
+  const row = document.createElement('li');
+  const contentWrapper = document.createElement('div');
+  contentWrapper.setAttribute('data-component', 'generator-list-item');
+
+  const generatorId = document.createElement('p');
+  generatorId.innerHTML = timerId;
+
+  const stop = createButton('stop', () => {
+    clearInterval(timerId);
+    row.remove();
+  });
+
+  contentWrapper.appendChild(generatorId);
+  contentWrapper.appendChild(stop);
+  row.appendChild(contentWrapper);
+  target.appendChild(row);
 }
 
 function createButton(text, listener) {
