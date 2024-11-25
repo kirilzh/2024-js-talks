@@ -1,0 +1,75 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Plural synchronous memory access</title>
+    <style>
+        [data-component="left-column"] {
+            display: flex;
+            flex-direction: column;
+        }
+
+        [data-component="right-column"] {
+            display: flex;
+            flex-direction: column;
+            align-self: baseline;
+        }
+
+        [data-component="generator-list-item"] {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        [data-component="controls-wrapper"] {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        [data-component="tick-list"] {
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+<div style="display: grid; grid-template-columns: repeat(2, 1fr)">
+    <div data-component="left-column">
+        <div data-component="controls-wrapper">
+            <h2>
+                Generators
+            </h2>
+            <button data-locator="create-generator">
+                Create
+            </button>
+        </div>
+        <ul data-locator="generator-list">
+        </ul>
+        <div>
+            <div data-component="tick-list" data-locator="created-ticks"></div>
+        </div>
+    </div>
+
+    <div data-component="right-column">
+        <div data-component="controls-wrapper">
+            <h2>
+                Consumers
+            </h2>
+            <button data-locator="create-iterator">
+                Create
+            </button>
+        </div>
+        <ul data-locator="iterator-list">
+        </ul>
+        <div>
+            <div data-component="tick-list" data-locator="consumed-ticks"></div>
+        </div>
+    </div>
+
+</div>
+<script src="main.js" type="application/javascript"></script>
+</body>
+</html>
